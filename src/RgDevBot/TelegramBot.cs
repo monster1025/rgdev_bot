@@ -6,13 +6,25 @@ namespace RgDevBot
     public class TelegramBot
     {
         private readonly TelegramBotClient _telegram;
-        public string Token => "1479535614:AAFqHdsUFikzOti0zknK_pN2sEONNAXecPY";
         public long MainChatId;
 
-        public TelegramBot(long chatId = -1001448086132)
+        public TelegramBot()
         {
+            var token = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
+            if (string.IsNullOrEmpty(token))
+            {
+                Console.WriteLine("Please define TELEGRAM_TOKEN variable.");
+                return;
+            }
+            int.TryParse(Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID"), out var chatId);
+            if (chatId == 0)
+            {
+                Console.WriteLine("Please define TELEGRAM_CHAT_ID variable.");
+                return;
+            }
+
             MainChatId = chatId;
-            _telegram = new TelegramBotClient(Token);
+            _telegram = new TelegramBotClient(token);
             _telegram.OnMessage += Bot_OnMessage;
             _telegram.StartReceiving();
         }
