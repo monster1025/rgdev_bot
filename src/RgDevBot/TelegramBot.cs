@@ -13,14 +13,14 @@ namespace RgDevBot
             var token = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
             if (string.IsNullOrEmpty(token))
             {
-                Console.WriteLine("Please define TELEGRAM_TOKEN variable.");
-                return;
+                throw new Exception("Please define TELEGRAM_TOKEN variable.");
+                
             }
-            int.TryParse(Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID"), out var chatId);
+
+            long.TryParse(Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID"), out var chatId);
             if (chatId == 0)
             {
-                Console.WriteLine("Please define TELEGRAM_CHAT_ID variable.");
-                return;
+                throw new Exception("Please define TELEGRAM_CHAT_ID variable.");
             }
 
             MainChatId = chatId;
