@@ -14,7 +14,14 @@ namespace RgDevBot
             var parser = new NewsParser(bot, config);
             while (true)
             {
-                parser.Parse();
+                try
+                {
+                    parser.Parse();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
                 Thread.Sleep(TimeSpan.FromSeconds(1));
             }
         }
