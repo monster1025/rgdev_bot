@@ -29,8 +29,11 @@ namespace RgDevBot
             var content = Get(url);
 
             var news = JsonConvert.DeserializeObject<NewsListResponse>(content);
-            var latestNews = news.results;
-            foreach (var post in latestNews)
+            var latestNews = news?.results;
+
+            Console.WriteLine($"[{DateTime.Now}] Получено {latestNews?.Count} новостей. Самая новая: {latestNews?.FirstOrDefault()?.id}.");
+
+            foreach (var post in latestNews ?? new List<News>())
             {
                 if (_config.ConfigValues.Contains(post.id))
                 {

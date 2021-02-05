@@ -22,7 +22,7 @@ namespace RgDevBot
                 {
                     Console.WriteLine(e);
                 }
-                Thread.Sleep(TimeSpan.FromSeconds(1));
+                Thread.Sleep(TimeSpan.FromSeconds(60));
             }
         }
     }
