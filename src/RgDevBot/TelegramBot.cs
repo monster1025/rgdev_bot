@@ -9,7 +9,7 @@ namespace RgDevBot
         public string Token => "1479535614:AAFqHdsUFikzOti0zknK_pN2sEONNAXecPY";
         public long MainChatId;
 
-        public TelegramBot(long chatId = -415825856)
+        public TelegramBot(long chatId = -1001448086132)
         {
             MainChatId = chatId;
             _telegram = new TelegramBotClient(Token);
