@@ -11,6 +11,9 @@ syntax: glob
 *.userosscache
 *.sln.docstates
 
+#settings files
+*.env
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
