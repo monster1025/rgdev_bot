@@ -4,6 +4,8 @@ services:
     build: ./
     container_name: rgdev
     restart: always
+    volumes:
+      - "./sent.json:/app/sent.json" 
     environment:
       - TZ=Europe/Moscow
     logging:

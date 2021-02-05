@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using NLog;
+using RgDevBot.Config;
 
 namespace RgDevBot
 {
@@ -7,8 +9,9 @@ namespace RgDevBot
     {
         static void Main(string[] args)
         {
+            var config = new SentConfig(LogManager.GetCurrentClassLogger());
             var bot = new TelegramBot();
-            var parser = new NewsParser(bot);
+            var parser = new NewsParser(bot, config);
             while (true)
             {
                 parser.Parse();

@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using RgDevBot.Config;
 using RgDevBot.ObjectModel;
 
 namespace RgDevBot
@@ -13,11 +14,13 @@ namespace RgDevBot
     public class NewsParser
     {
         private readonly TelegramBot _bot;
+        private readonly SentConfig _config;
         private int _lastSentId = -1;
 
-        public NewsParser(TelegramBot bot)
+        public NewsParser(TelegramBot bot, SentConfig config)
         {
             _bot = bot;
+            _config = config;
         }
 
         public void Parse()
@@ -26,19 +29,29 @@ namespace RgDevBot
             var content = Get(url);
 
             var news = JsonConvert.DeserializeObject<NewsListResponse>(content);
-            var latestNews = news.results.OrderByDescending(f => f.id).FirstOrDefault();
-
-            if (latestNews != null && latestNews.id != _lastSentId)
+            var latestNews = news.results;
+            foreach (var post in latestNews)
             {
-                var text = $"{latestNews.title}:\r\nhttps://rg-dev.ru/press/news/all/{latestNews.id}/";
-                Console.WriteLine(text);
-                _bot.SendMessage(text);
+                if (_config.ConfigValues.Contains(post.id))
+                {
+                    continue;
+                }
 
-                _lastSentId = latestNews.id;
+                try
+                {
+                    var text = $"{post.title}:\r\nhttps://rg-dev.ru/press/news/all/{post.id}/";
+                    Console.WriteLine(text);
+                    _bot.SendMessage(text);
+
+                    _config.ConfigValues.Add(post.id);
+                    _config.Save();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
         }
-
-
 
         public string Get(string url, string contentType = "application/json")
         {
