@@ -13,3 +13,9 @@ services:
       driver: json-file
       options:
         max-size: 50m 
+  tor:
+   build:
+    context: ./tor/docker
+   ports:
+      - "9000:9150"
+   restart: always

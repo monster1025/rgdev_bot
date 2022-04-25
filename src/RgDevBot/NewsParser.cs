@@ -60,7 +60,7 @@ namespace RgDevBot
             var httpRequest = (HttpWebRequest)WebRequest.Create(url);
             httpRequest.ContentType = contentType;
             httpRequest.Method = "GET";
-            httpRequest.Proxy = new HttpToSocks5Proxy("tor", 9000);
+            httpRequest.Proxy = new HttpToSocks5Proxy("192.168.1.6", 9000);
 
             var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
