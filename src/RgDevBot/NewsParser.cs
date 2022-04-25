@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using MihaZupan;
 using Newtonsoft.Json;
 using RgDevBot.Config;
 using RgDevBot.ObjectModel;
@@ -59,6 +60,7 @@ namespace RgDevBot
             var httpRequest = (HttpWebRequest)WebRequest.Create(url);
             httpRequest.ContentType = contentType;
             httpRequest.Method = "GET";
+            httpRequest.Proxy = new HttpToSocks5Proxy("tor", 9000);
 
             var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
