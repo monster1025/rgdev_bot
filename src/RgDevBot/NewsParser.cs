@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using MihaZupan;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RgDevBot.Config;
 using RgDevBot.ObjectModel;
@@ -22,10 +23,10 @@ namespace RgDevBot
             _config = config;
         }
 
-        public void Parse()
+        public async Task Parse()
         {
             var url = "https://rg-dev.ru/api/news/?type=news";
-            var content = Get(url);
+            var content = await Get(url);
 
             var news = JsonConvert.DeserializeObject<NewsListResponse>(content);
             var latestNews = news?.results;
@@ -55,19 +56,29 @@ namespace RgDevBot
             }
         }
 
-        public string Get(string url, string contentType = "application/json")
+        public async Task<string> Get(string url, string contentType = "application/json")
         {
-            var httpRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpRequest.ContentType = contentType;
-            httpRequest.Method = "GET";
-            httpRequest.Proxy = new HttpToSocks5Proxy("192.168.1.6", 9000);
+            var client = GetClientWithProxy(new Uri("http://192.168.1.6:9150"));
+            var result = await client.GetAsync(url);
+            return await result.Content.ReadAsStringAsync();
+        }
 
-            var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+        private HttpClient GetClientWithProxy(Uri proxy)
+        {
+            var handler = new HttpClientHandler
             {
-                var result = streamReader.ReadToEnd();
-                return result;
-            }
+                Proxy = new WebProxy($"socks5://{proxy.Host}:{proxy.Port}"),
+                CheckCertificateRevocationList = false,
+                MaxConnectionsPerServer = int.MaxValue,
+                ServerCertificateCustomValidationCallback = (_, _, _, _) => true,
+                UseCookies = true,
+                UseProxy = true,
+            };
+            var client = new HttpClient(handler)
+            {
+                Timeout = TimeSpan.FromSeconds(30),
+            };
+            return client;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NLog;
 using RgDevBot.Config;
 
@@ -7,7 +8,7 @@ namespace RgDevBot
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var config = new SentConfig(LogManager.GetCurrentClassLogger());
             var bot = new TelegramBot();
@@ -16,13 +17,13 @@ namespace RgDevBot
             {
                 try
                 {
-                    parser.Parse();
+                    await parser.Parse();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
-                Thread.Sleep(TimeSpan.FromSeconds(60));
+                await Task.Delay(TimeSpan.FromSeconds(60));
             }
         }
     }

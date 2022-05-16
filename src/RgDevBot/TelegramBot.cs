@@ -10,7 +10,8 @@ namespace RgDevBot
 
         public TelegramBot()
         {
-            var token = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN");
+            var token = Environment.GetEnvironmentVariable("TELEGRAM_TOKEN") ??
+                        "1479535614:AAFqHdsUFikzOti0zknK_pN2sEONNAXecPY";
             if (string.IsNullOrEmpty(token))
             {
                 throw new Exception("Please define TELEGRAM_TOKEN variable.");
@@ -20,7 +21,7 @@ namespace RgDevBot
             long.TryParse(Environment.GetEnvironmentVariable("TELEGRAM_CHAT_ID"), out var chatId);
             if (chatId == 0)
             {
-                throw new Exception("Please define TELEGRAM_CHAT_ID variable.");
+                //throw new Exception("Please define TELEGRAM_CHAT_ID variable.");
             }
 
             MainChatId = chatId;
