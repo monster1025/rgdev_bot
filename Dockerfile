@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS publish
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 ADD ./src /src
 WORKDIR /src
@@ -10,7 +10,7 @@ RUN dotnet test RgDevBot.sln -c Release
 RUN dotnet publish RgDevBot.sln -c Release -o /app
 
 # Final image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=build /app .
 ENTRYPOINT ["dotnet", "RgDevBot.dll"]

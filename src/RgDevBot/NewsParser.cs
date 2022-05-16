@@ -25,7 +25,7 @@ namespace RgDevBot
 
         public async Task Parse()
         {
-            var url = "https://rg-dev.ru/api/news/?type=news";
+            var url = "https://rg-dev.ru/api/news/?format=json&type=news";
             var content = await Get(url);
 
             var news = JsonConvert.DeserializeObject<NewsListResponse>(content);
